@@ -39,6 +39,15 @@ $\cal{T}$ - expiration time, and the supremum is taken over stopping times that 
 
 
 
+
+
+
+Without loss of generality it is assumed that $\mathcal{T}$ is equal to an integer $N$ and that allowable exercise times are seperated by a time interval of unit length.
+
+The price of this option is then:
+$$\sup_{\tau}\mathbb{E}[\alpha^{\tau}g(x_{\tau})]$$
+
+where $\alpha = exp^{-\tau}$.
 #Conclusion (change)
 
 From the turkish paper the conclusion (maybe not applicable to our paper)
