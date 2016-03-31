@@ -1,6 +1,6 @@
 ---
 title: "American style Options - Regression methods on Pricing"
-author: "Team DUN-Y - Dom, Uwe, Niti, YQ"
+author: "Team DUNY Dom, Uwe, Niti, YQ"
 date: "March 2016"
 output: pdf_document
 ---
@@ -35,19 +35,20 @@ $g(x)$ - intrinsic value of the option when the state is $x$
 $\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$
 
 
-
-
-
-
 Without loss of generality it is assumed that $\mathcal{T}$ is equal to an integer $N$ and that allowable exercise times are seperated by a time interval of unit length.
 
 The price of this option is then:
 $$\sup_{\tau}\mathbb{E}[\alpha^{\tau}g(x_{\tau})]$$
 
-where $\alpha = exp^{-\tau}$.
+where $\alpha = e^{-\tau}$. In this discrete-time and Markovian formulation, the dynamics of the risk-neutral process can be described by a transition operator $P$, defined by:
+$$(PJ)(x) = \mathbb{E}[J(x_{n+1})| x_n=x]$$
 
+The above expression does not depend on $n$, since the process is assumed time-homogeneous. A primary motivation for this discretization is that it facilitates exposition of computational procedures, which typically entail discretization. 
+The algorithm generates a sequence $J_N, J_{N-1}, J_{N-2},\ldot, J_0$ of value functions, where $J_n$ is the price of the option at time $n$, if $x_n$ is equal to $x$. The value functions are generated iteratively according to
 
-
+$$J_n = g$$
+and $J_n = \max(g,\alpha PJ_{n+1}$ $n=N-1,N-2,\ldots,0$, where the optimal is J_N(x_0).
+In principle, value iteration can be used to price any option. However, the algorithm suffers from the curse of dimensionality - i.e., the computation time grows exponentially in the number $d$ of state variables. This difficulty arises because computations involve discretization of the state space, and such discretization leads to a grid whose size grows exponentially in dimension. Since one value is computed and stored for each point in the grid, the computation time exhibits exponential growth.
 
 #Approximations
 $\tilde{J}:\Re^K \times \Re^K \mapsto \Re$ which assings values $\tilde{J}(x,r)$ to states $x$ where $r \in \Re^K$ is a vector of free parameters. The objective then becomes to choose, for each $n$, a parameter vector $r_n$ so that:  
