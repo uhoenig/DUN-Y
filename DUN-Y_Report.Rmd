@@ -1,12 +1,9 @@
 ---
-output: pdf_document
----
----
 title: "American style Options - Regression methods on Pricing"
 author: "Team DUN-Y - Dom, Uwe, Niti, YQ"
 date: "March 2016"
-output: rmarkdown::pdf_document
-
+output: pdf_document
+---
 
 ## Abstract
 In this report we introduce and analyze a simulation-based approximate dynamic programming method for pricing complex American-style options. The usual starting point is the binomial option pricing model, but we extend our analysis further by using regression methods. Our methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space. We show that with an arbitrary choice of this set, the approximation error can grow exponentially with the time horizon (time to expiration).
@@ -30,7 +27,7 @@ later time where the payoff might be even bigger.
 OTHER INTRO TEXT HERE
 
 The price is given by:  
-$\sup_{\tau \in [0,\cal{T}]} E[e^{-r\tau}g(x_\tau)]$  
+$$\sup_{\tau \in [0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$  
 where  
 ${x_\tau \in \Re^d | 0\leq t \leq \cal{T}}$ - risk-neutral process, assumed to be Markov    
 $r$ - risk-free interest rate, assumed to be a known constant  
@@ -48,6 +45,23 @@ The price of this option is then:
 $$\sup_{\tau}\mathbb{E}[\alpha^{\tau}g(x_{\tau})]$$
 
 where $\alpha = exp^{-\tau}$.
+
+
+
+
+#Approximations
+$\tilde{J}:\Re^K \times \Re^K \mapsto \Re$ which assings values $\tilde{J}(x,r)$ to states $x$ where $r \in \Re^K$ is a vector of free parameters. The objective then becomes to choose, for each $n$, a parameter vector $r_n$ so that:  
+$$\tilde{J}(x,r_n) \approx J_n(x)$$
+
+--------------  ----------  --------
+strike           $\bar{x}$      1
+high return        $u$        3/2
+low return         $d$        2/3
+probability        $p$       0.4121
+of high return
+discount factor $\alpha$      0.99
+--------------  ----------  --------
+
 #Conclusion (change)
 
 From the turkish paper the conclusion (maybe not applicable to our paper)
