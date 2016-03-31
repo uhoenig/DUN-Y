@@ -3,7 +3,7 @@
 # Last update:  31.03.16
 # Type:         Project
 
-#In this document I have listed a few functions that compute the price of an 
+#In this document I have listed a few functions that compute the price of an
 #(US/EU) Call Option
 
 ###PARAMETERS
@@ -12,11 +12,11 @@
 
 #R Codes for Black-Scholes Formula to Price European Options
 S0=100      #Stock price at time 0
-K=120      #Strike (or exercise) price of the stock 
+K=120      #Strike (or exercise) price of the stock
 r=0.1      #risk free interest rate
 sigma=0.25 #volatility (std deviation) of the underlying stock price
 tau=1        #time (usually I put 1 year)
-steps=12   #step size, i.e into how many steps you want your approximation discretized 
+steps=12   #step size, i.e into how many steps you want your approximation discretized
 
 ###OPTION 1 (starts)
 #Package AmericanCallOpt
@@ -30,43 +30,43 @@ call_price_am_bin
 #Matlab code translated into R - (better than using a package - see option 1)
 
 AmericanCallDiv <- function(S0,K,r,tau,sigma,D=0,tauD=0,steps){
-  
+
   f7 = 1
   dt = tau / steps
   v = exp(-r*dt )
   u = exp( sigma * sqrt ( dt ))
   d = 1 / u
   p = ( exp ( r * dt ) - d) / ( u - d )
-  
+
   # adjust spot for dividend
   S0 = S0 - D * exp (- r * tauD )
   S = matrix(0, steps + 1 ,1)
   S[f7+0,] = S0 * d ^ steps
-  
+
   for (j in 1:steps){
-    S[f7 + j,] = S[f7 + j - 1,] * u / d   
+    S[f7 + j,] = S[f7 + j - 1,] * u / d
   }
-  
+
   # initialise option values at maturity ( period M )
-  
+
   C = apply(cbind(S - K , 0),1,max)
-  
+
   # step back through the tree
-  
+
   for (i in (steps-1):0){
     for (j in 0:i){
       C[f7 +j] = v * ( p * C[f7 + j + 1] + (1 - p) * C[f7 + j] )
       S [f7 +j] = S[f7 + j] / d
-      t = tau * i / steps 
+      t = tau * i / steps
       if (t > tauD){
         C[f7 + j] = max(C[f7 + j] , S[f7 + j,] - K )
       }
       else{
-        C[f7 + j] = max(C[f7 + j] , S[f7 + j,] + D*exp(-r*(tauD-t)) - K) 
+        C[f7 + j] = max(C[f7 + j] , S[f7 + j,] + D*exp(-r*(tauD-t)) - K)
       }
     }
   }
-  
+
   return(C0 = C[f7+0])
 }
 AmericanCallDiv(S0,K,r,tau,sigma,D=0,tauD=0,steps)
@@ -75,7 +75,7 @@ AmericanCallDiv(S0,K,r,tau,sigma,D=0,tauD=0,steps)
 
 #Note: Option 1 and 2 give exactly the same answer, which is great
 
-###OPTION 3 (starts) 
+###OPTION 3 (starts)
 #European call option just so you see that there exists a price difference
 #between the two option styles
 
@@ -107,16 +107,17 @@ n=1000 #I suppose the number of simulations?
 d=1000 #used in th loop (number of iter?)
 
 simul_AMERICAN_LSM <- function(n,d,S0,K,sigma,r,tau){
-  S0<-S0/K
-  dt<-tau/d
+  S0<-S0/K #S0 market price at t0, K strike price
+  dt<-tau/d #tau number of years. d number of periods
   z<-rnorm( n )
-  s.t<-S0*exp((r - 1/2*sigma ^ 2)*tau+sigma*z*(tau^ 0.5))
+  #r risk free rate, sigma volatility (std dev) of the stock price
+  s.t<-S0*exp((r - 1/2*sigma ^ 2)*tau+sigma*z*(tau^ 0.5)) #vector
   s.t[(n + 1):(2*n)]<-S0*exp((r - 1/2*sigma ^ 2 )*tau-sigma*z*(tau^ 0.5))
   CC<-pmax(1-s.t,0)
 
-  payoffeu<-exp(-r*T)*(CC[1:n]+CC[(n+1):(2*n)])/2*K
+  payoffeu<-exp(-r*tau)*(CC[1:n]+CC[(n+1):(2*n)])/2*K #update T to tau
   euprice<-mean(payoffeu)
-  
+
   for (k in (d-1):1){
     z<-rnorm(n)
     mean<-(log(S0)+k*log(s.t[1 : n] ) ) /( k+1)
@@ -137,14 +138,14 @@ simul_AMERICAN_LSM <- function(n,d,S0,K,sigma,r,tau){
     CC<-(EF==0)*CC*exp(-r*dt)+(EF==1)*CE
     s.t<-s.t_1
   }
-  
+
   payoff<-exp(-r*dt)*(CC[ 1 : n]+CC[ ( n + 1 ): ( 2*n ) ] ) /2
   usprice<-mean(payoff*K)
   error<-1.96*sd(payoff*K)/sqrt(n)
   earlyex<-usprice - euprice
   data.frame(usprice, error, euprice) #,premium? (add it if you can find the column)
 }
-simul_AMERICAN_LSM(n,d,S0,K,sigma,r,tau)  
+simul_AMERICAN_LSM(n,d,S0,K,sigma,r,tau)
 
 #definitely a big price difference here!
 
@@ -157,7 +158,7 @@ newton_raphson<-function (S0,K,r,sigma,tau,steps){
   s<-S0
   dt <- tau/steps
   repeat{
-    d1=(log ( s/K)+( r+sigma ^2/2 )*dt )/( sigma*sqrt(dt)) 
+    d1=(log ( s/K)+( r+sigma ^2/2 )*dt )/( sigma*sqrt(dt))
     d2=d1-sigma*sqrt(dt)
     f<-(K*exp(-r*dt)*pnorm(-d2)-s*pnorm(-d1)-(K-s))
     fderivative<-((s*sigma*sqrt(dt)) ^ (-1) )*(-K*exp(-r*dt)*dnorm(d2)+s*dnorm(d1))+pnorm(d1)
