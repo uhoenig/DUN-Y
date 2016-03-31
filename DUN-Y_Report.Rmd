@@ -1,4 +1,7 @@
 ---
+output: pdf_document
+---
+---
 title: "American style Options - Regression methods on Pricing"
 author: "Team DUN-Y - Dom, Uwe, Niti, YQ"
 date: "March 2016"
@@ -15,7 +18,7 @@ An American call or put option is a
 contract such that the owner may (without obligation) buy or sell some prescribed
 asset (called the underlying) S from the writer at any time (expiry date) T between the
 start date and a prescribed expiry date in the future, not just at expiry, and at a
-prescribed price (exercise or strike price) K. The exercise time τ can be represented as
+prescribed price (exercise or strike price) K. The exercise time $\tau$ can be represented as
 a stopping time; so that American options are an example of optimal stopping time
 problems.
 Without prescribed exercise time makes it much harder to evaluate these options. The
@@ -26,7 +29,13 @@ later time where the payoff might be even bigger.
 
 OTHER INTRO TEXT HERE
 
-
+The price is given by:  
+$\sup_{\tau \in [0,\cal{T}]} E[e^{-r\tau}g(x_\tau)]$  
+where  
+${x_\tau \in \Re^d | 0\leq t \leq \cal{T}}$ - risk-neutral process, assumed to be Markov    
+$r$ - risk-free interest rate, assumed to be a known constant  
+$g(x)$ - intrinsic value of the option when the state is $x$  
+$\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$
 
 
 
