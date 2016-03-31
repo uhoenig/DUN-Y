@@ -5,17 +5,13 @@ date: "March 2016"
 output: rmarkdown::pdf_document
 
 
-## Abstract (CHANGE)
-In this report we introduce and analyze a simulation-based approximate dynamic programming method for pricing complex American-style options. The usual starting point is the binomial option pricing model, but we extend our analysis further by using regression methods. Our methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space. We show that with an arbitrary choice of this set, the approximation error can grow exponentially with the time horizon (time to expiration). (One more sentence)
+## Abstract
+In this report we introduce and analyze a simulation-based approximate dynamic programming method for pricing complex American-style options. The usual starting point is the binomial option pricing model, but we extend our analysis further by using regression methods. Our methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space. We show that with an arbitrary choice of this set, the approximation error can grow exponentially with the time horizon (time to expiration).
 
 
-## Introduction (CHANGE)
-What is an 'American Option'
-An american option is an option that can be exercised anytime until time of expiration. American options allow option holders to exercise the option at any time prior to and including its maturity date, thus increasing the value of the option to the holder relative to European options, which can only be exercised at maturity. The majority of exchange-traded options are American.
-
-(look at below text for )
-An American option is like a European option except that the holder may exercise at any
-time between the start date and the expiry date. An American call or put option is a
+## Introduction (I think this is okay for now!)
+# What is an 'American-style Option'
+An American call or put option is a
 contract such that the owner may (without obligation) buy or sell some prescribed
 asset (called the underlying) S from the writer at any time (expiry date) T between the
 start date and a prescribed expiry date in the future, not just at expiry, and at a
@@ -28,10 +24,13 @@ all, to exercise. If, at time t, the option is out-of-the-money then it is clear
 exercise. However, if the option is in-the-money it may be beneficial to wait until a
 later time where the payoff might be even bigger. 
 
+OTHER INTRO TEXT HERE
 
-#Conclusion
 
 
+
+
+#Conclusion (change)
 
 From the turkish paper the conclusion (maybe not applicable to our paper)
 FD and tree techniques are efficient methods to price American options with single
