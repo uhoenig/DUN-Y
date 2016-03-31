@@ -12,7 +12,7 @@
 
 #R Codes for Black-Scholes Formula to Price European Options
 S0=100      #Stock price at time 0
-K=120      #Strike (or exercise) price of the stock 
+K=80      #Strike (or exercise) price of the stock 
 r=0.1      #risk free interest rate
 sigma=0.25 #volatility (std deviation) of the underlying stock price
 tau=1        #time (usually I put 1 year)
@@ -150,6 +150,61 @@ simul_AMERICAN_LSM(n,d,S0,K,sigma,r,tau)
 
 ###OPTION 3 (ends)
 
+
+###OPTION 4 (starts)
+#American Put Options
+
+AmericanPutDiv <- function(S0,K,r,tau,sigma,D=0,tauD=0,steps){
+  
+  f7 = 1
+  dt = tau / steps
+  v = exp(-r*dt )
+  u = exp( sigma * sqrt ( dt ))
+  d = 1 / u
+  p = ( exp ( r * dt ) - d) / ( u - d )
+  
+  # adjust spot for dividend
+  S0 = S0 - D * exp (- r * tauD )
+  S = matrix(0, steps + 1 ,1)
+  S[f7+0,] = S0 * d ^ steps
+  
+  for (j in 1:steps){
+    S[f7 + j,] = S[f7 + j - 1,] * u / d   
+  }
+  
+  # initialise option values at maturity ( period M )
+  
+  C = apply(cbind(K - S , 0),1,max)
+  
+  # step back through the tree
+  
+  for (i in (steps-1):0){
+    for (j in 0:i){
+      C[f7 +j] = v * ( p * C[f7 + j + 1] + (1 - p) * C[f7 + j] )
+      S [f7 +j] = S[f7 + j] / d
+      t = tau * i / steps 
+      if (t > tauD){
+        C[f7 + j] = max(C[f7 + j] , S[f7 + j,] - K )
+      }
+      else{
+        C[f7 + j] = max(C[f7 + j] , S[f7 + j,] + D*exp(-r*(tauD-t)) - K) 
+      }
+    }
+  }
+  
+  return(C0 = C[f7+0])
+}
+AmericanPutDiv(S0,K,r,tau,sigma,D=0,tauD=0,steps)
+
+###Option 4 (ends)
+
+###Option 5 (starts)
+
+install.packages("fOptions")
+library(fOptions)
+
+###Option 5 (ends)
+
 ###PLOTS AND CO (starts)
 #A.3. R Codes for the Exact Early Exercise Boundary of an American Put
 #at time td−1 by Newton-Raphson Method
@@ -169,3 +224,175 @@ newton_raphson<-function (S0,K,r,sigma,tau,steps){
   s
 }
 newton_raphson(S0,K,r,sigma,tau,steps)
+
+
+###Yerik's code
+
+###
+sim.Price_Bin <- function(N=10, u=3/2, d=2/3, x0 =1){
+  
+  x <- matrix(0, nrow = N+1, ncol = N+1)
+  
+  for(i in 1: (N+1)){
+    
+    for(j in 1:i){
+      
+      x[i, j]=x0*u^(j-1)*d^(i-j)
+    }
+    
+  }
+  return(x)
+}
+####
+
+####
+sim.Prob_Bin <- function(N=10, p = 0.4121){
+  
+  pi <- matrix(0, nrow = N+1, ncol = N+1)
+  
+  for(i in 1: (N+1)){
+    
+    for(j in 1:i){
+      
+      pi[i,j] <- dbinom(x = j-1, size = i-1, prob = p )
+    }
+    
+  }
+  
+  return(pi)
+}
+####
+
+
+g <- function(x, strike = 1){
+  
+  return(pmax(0, strike - x))
+  
+}
+
+
+P <- function(state, p = 0.4121){
+  return(sum(state*c(1-p, p))) 
+}
+
+
+N <- 3
+x_strike <- 1
+alpha <- 0.99
+p = 0.4121
+x0=1
+
+x <- sim.Price_Bin(N=N, x0 = x0)
+pi <- sim.Prob_Bin(N=N, p = p)
+
+
+
+J <- matrix(0, nrow = N+1, ncol = N+1)
+
+
+J[N+1,] <- g(x=x[N+1,])
+
+for(i in N:1){
+  
+  for(j in 1:i){
+    J[i,j] <- pmax(g(x=x[i,j]), alpha * P(J[i+1,c(j,j+1)], p))
+    
+  }
+  
+}
+
+
+##Q value
+
+
+Q <- matrix(0, nrow = N+1, ncol = N+1)
+
+Q[N+1,] <- g(x[N+1,])
+
+for(j in 1:N){
+  
+  Q[N, j] <- alpha * P(Q[N+1,c(j,j+1)], p)
+  
+}
+
+for(i in (N-1):1){
+  for(j in 1:i){
+    Q[i,j] <- alpha * P(pmax(g(x[i+1,c(j, j+1)]), Q[i+1,c(j,j+1)]), p)
+    
+  }
+  
+}
+
+J_Q <- pmax(g(x[1,1]), Q[1,1])
+
+
+##Regression with fictitious pi
+
+dim <- 3
+
+phi1 <- function(x){
+  
+  return(rep(1, length(x)))
+}
+
+phi2 <- function(x){
+  
+  return(x)
+}
+
+phi3 <- function(x){
+  
+  return(x^2)
+}
+
+
+phi <- function(x, dim = 3, base = list(phi1, phi2, phi3)){
+  
+  base_Mat <- matrix(0, nrow = length(x), ncol = dim)
+  for( j in 1:dim){
+    base_Mat[,j] <- base[[j]](x)
+    
+  }
+  return(base_Mat)
+}
+
+r <- matrix(0, ncol = N, nrow = dim )
+
+
+S <- seq(from = 0.1, to = 2, by = 0.1)
+
+u = 3/2
+d = 2/3
+
+Q1 <- matrix(0, nrow = N, ncol = length(S))
+
+for(j in 1:length(S)){
+  
+  Q1[N, j] <- alpha * P(g(c(S[j]*d, S[j]*u)),p)
+  
+}
+
+r[, N] <- solve((t(phi(S)) %*% phi(S)), t(phi(S)) %*% Q1[N,])
+
+
+for (i in (N-1):1){
+  
+  for(j in 1:length(S)){
+    
+    
+    Q1[i, j] <- alpha*P(pmax(g(c(S[j]*d, S[j]*u)), 
+                             c(phi(S[j]*d) %*% r[,i+1], phi(S[j]*u) %*% r[,i+1])))
+    
+  }
+  
+  r[, i] <- solve((t(phi(S)) %*% phi(S)), t(phi(S)) %*% Q1[i,])
+  
+}
+
+Q0_1 <- phi(S[10]) %*% r[,1]
+##regression real
+
+
+
+
+
