@@ -1,7 +1,8 @@
 # DUN-Y
 Dirty Undy
 
-PROJECT SMO. 
+PROJECT SMO: Estimation of American Call Option prices - Binomial vs Regression Models 
+
 Check out the .R file where I put all the functions.
 mainressource.pdf and book_matlabcode are the code ressources
 
