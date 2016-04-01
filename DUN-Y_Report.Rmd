@@ -43,7 +43,7 @@ where $\alpha = e^{-\tau}$. In this discrete-time and Markovian formulation, the
 $$(PJ)(x) = \mathbb{E}[J(x_{n+1})| x_n=x]$$
 
 The above expression does not depend on $n$, since the process is assumed time-homogeneous. A primary motivation for this discretization is that it facilitates exposition of computational procedures, which typically entail discretization. 
-The algorithm generates a sequence $J_N, J_{N-1}, J_{N-2},\ldot, J_0$ of value functions, where $J_n$ is the price of the option at time $n$, if $x_n$ is equal to $x$. The value functions are generated iteratively according to
+The algorithm generates a sequence $J_N, J_{N-1}, J_{N-2}... J_0$ of value functions, where $J_n$ is the price of the option at time $n$, if $x_n$ is equal to $x$. The value functions are generated iteratively according to
 
 $$J_n = g$$
 and $J_n = \max(g,\alpha PJ_{n+1}$ $n=N-1,N-2,\ldots,0$, where the optimal is J_N(x_0).
