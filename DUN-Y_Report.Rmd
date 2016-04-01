@@ -2,7 +2,7 @@
 title: "American style Options - Regression methods on Pricing"
 author: "Team DUNY Dom, Uwe, Niti, YQ"
 date: "April 2016"
-output: html_document
+output: pdf_document
 ---
 
 # Abstract
@@ -55,6 +55,16 @@ probability        $p$       0.4121
 of high return
 discount factor $\alpha$      0.99
 --------------  ----------  --------
+
+
+|-----------------|---------------|--------|
+| strike          |   $\bar{x}$   |   1    |
+| high return     |     $u$       |  3/2   |
+| low return      |     $d$       |  2/3   |
+| probability     |     $p$       | 0.4121 |
+| of high return  |               |        |
+| discount factor |   $\alpha$    |  0.99  |
+
 
 #Conclusion (change)
 
