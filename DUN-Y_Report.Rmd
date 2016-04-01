@@ -1,7 +1,7 @@
 ---
 title: "American style Options - Regression methods on Pricing"
 author: "Team DUNY Dom, Uwe, Niti, YQ"
-date: "March 2016"
+date: "April 2016"
 output: pdf_document
 ---
 
@@ -11,18 +11,11 @@ In this report we introduce and analyze a simulation-based approximate dynamic p
 
 ## Introduction 
 # What is an 'American-style Option'
-An American call or put option is a
-contract such that the owner may (without obligation) buy or sell some prescribed
-asset (called the underlying) S from the writer at any time (expiry date) T between the
-start date and a prescribed expiry date in the future, not just at expiry, and at a
-prescribed price (exercise or strike price) K. The exercise time $\tau$ can be represented as
-a stopping time; so that American options are an example of optimal stopping time
-problems.
-Without prescribed exercise time makes it much harder to evaluate these options. The
-holder of an American option is thus faced with the dilemma of deciding when, if at
-all, to exercise. If, at time t, the option is out-of-the-money then it is clearly best not to
-exercise. However, if the option is in-the-money it may be beneficial to wait until a
-later time where the payoff might be even bigger. 
+
+American style option contracts are traded extensively over several exchanges. It differs from the European options in that it gives the holder the right to exercise at any time during the contract period. Between the start date and a prescribed expiry date in the future, the holder may choose to buy or sell some prescribed underlying asset (S) at a prescribed price called the strike price (K) at any time. The exercise time $\tau$ can be represented as a stopping time. Assuming that the exercise decision is made to maximize the payoff, option price can be determined by computing the discounted expectation of the payoff of the option under a risk-neutral measure. 
+
+However, this large range of possible stopping times makes the valuation of American option enormously difficult.The holder of an American option is thus faced with the dilemma of deciding when, if at all, to exercise. If, at time t, the option is out-of-the-money then it is clearly best not to exercise. However, if the option is in-the-money it may be beneficial to wait until a
+later time where the payoff might be even bigger.
 
 ## Define Problem
 
