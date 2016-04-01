@@ -22,7 +22,7 @@ later time where the payoff might be even bigger.
 The price is given by:  
 $$\sup_{\tau \in [0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$  
 where  
-${x_\tau \in \Re^d | 0\leq t \leq \cal{T}}$ - risk-neutral process, assumed to be Markov    
+$\{x_\tau \in \Re^d | 0\leq t \leq \cal{T}\}$ - risk-neutral process, assumed to be Markov    
 $r$ - risk-free interest rate, assumed to be a known constant  
 $g(x)$ - intrinsic value of the option when the state is $x$  
 $\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$
