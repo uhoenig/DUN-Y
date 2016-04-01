@@ -31,7 +31,7 @@ can be determined by computing the discounted expectation of the payoff of the
 option under a risk-neutral measure.
 
 However, this large range of possible stopping times makes the valuation of
-American option enormously difficult.The holder of an American option is thus
+American option enormously difficult. The holder of an American option is thus
 faced with the dilemma of deciding when, if at all, to exercise. If, at time t,
 the option is out-of-the-money then it is clearly best not to exercise. However,
 if the option is in-the-money it may be beneficial to wait until a later time
@@ -49,7 +49,7 @@ $\cal{T}$ - expiration time, and the supremum is taken over stopping times that
 assume values in $[0,\cal{T}]$
 
 Without loss of generality it is assumed that $\mathcal{T}$ is equal to an
-integer $N$ and that allowable exercise times are seperated by a time interval
+integer $N$ and that allowable exercise times are separated by a time interval
 of unit length.
 
 The price of this option is then: 
@@ -73,7 +73,7 @@ iteration can be used to price any option. However, the algorithm suffers from
 the curse of dimensionality; the computation time grows exponentially in the
 number $d$ of state variables. This difficulty arises because computations
 involve discretization of the state space, which leads to a grid whose size
-grows exponentially with multiple sources of uncertainity. Also, one value is
+grows exponentially with multiple sources of uncertainty. Also, one value is
 computed and stored for each point in the grid leading to extensive storage
 space as well as exponential growth in the computation time.
 
@@ -86,7 +86,7 @@ One may define several features $\phi_1, ... , \phi_k$. Then to each state $x \i
 
 The choice of the features and parameter requires theoretical analysis, human experience and that some computation of appropriate values is possible. In this paper we restrict our analysis to the least square method.
 
-This simplest form of approximate value iteration involves a single projection matrix $\Pi$ that projects onto the feature space with respect to a weigthed quadratic norm. We extend our analysis to sample-based time dependent projection. Generally exact computation of projection is not viable. However, one can approximate effectively by sampling a collection of states $y_1,...,y_m$ $\in \Re^d$ according to the probability measure $\pi$ and then defining an approximate projection operator
+This simplest form of approximate value iteration involves a single projection matrix $\Pi$ that projects onto the feature space with respect to a weighted quadratic norm. We extend our analysis to sample-based time dependent projection. Generally exact computation of projection is not viable. However, one can approximate effectively by sampling a collection of states $y_1,...,y_m$ $\in \Re^d$ according to the probability measure $\pi$ and then defining an approximate projection operator
 
 $$\tilde{\Pi}J=argmin_{\Phi r} \sum_{i=1}^m(J(y_i)-(\Phi r)(y_i))^2$$.
 
@@ -98,7 +98,7 @@ $$\tilde{J}(\cdot,r_{n})=\tilde{\Pi} \max(g,\alpha P\tilde{J}(\cdot,r_{n+1}))$$
 
 The drawback with this method, however, is that for each sample $y_i$ and any function $J$ we need to compute the expecation $(PJ)(y_i)=\mathbb{E}[J(x_{k+1})|x_k=y_i]$ which is over a potentially high dim space. This poses a computational challenge which can be resolved by Monte Carlo simulation.
 
-For each sample $y_i$ we can simulate independent samples $z_{i,1},...,z_{i,l}$ from the transition distribution conditiond on the state being $y_i$.
+For each sample $y_i$ we can simulate independent samples $z_{i,1},...,z_{i,l}$ from the transition distribution conditioned on the state being $y_i$.
 
 ## Approximation using Q-Values and single samples estimates
 
@@ -114,7 +114,21 @@ where $n=N-2,N-1,...,0$
 Here we base our approximation of the expectation of only a single sample. We select $m$ independent random samples of the state, $y_1,...,y_m$, according to the probability measure $\pi$, and for each $y_i$, we simulate a successor state $z_i$. Then our parameter vector $r_n$ is found by minimizing 
 $$\sum_{i=1}^m \left(\alpha \max \lbrace{g(z_i),\sum_{k=1}^K r_{n+1}(k)\phi_k(z_i) \rbrace}-\sum_{k=1}^K r(k)\phi_k(y_i) \right)^2 $$ with respect to  $r_1,...,r_K$.
 
-Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of (tildaPJ)($y_i$) = (PJ)($y_i$) for any function J, making our approximation an unabiased estimate the true value. Note that (tilda P) enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of (tildaP) was nonlinear.
+Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of $(\tilde{P}J)(y_i) = (PJ)(y_i$) for any function J, making our approximation an unabiased estimate the true value. Note that $\tilde{P}$ enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of $\tilde{P}$ was nonlinear.
+
+In a more general version of the algorithm we introduce probability measures $\pi_0,...,\pi_{N-1}$ such that for each time $n$ we generate $m$ random states $y_{ni},...,y_{nm}$ sampled independently. This leads to an approximate projection and our dynamic pricing algorithm becomes 
+
+$$\tilde{Q}(\cdot, r_{N-1})=\alpha \tilde{\Pi}_{N-1} \tilde{P}g$$
+$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi}_n \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}))$$
+where $n=N-2,N-1,...,0$
+
+If the sample states used in the approximate projections are obtained by simulating trajectories of the process $x_n$ then the approximation error does not grow exponentially but rather of the order $\sqrt(N \epsilon)$. The approximation error of the idealized algorithm is the best possible error under the chosen aproximation architecture.
+$\epsilon _n^ * =\min_r \|\tilde{Q}(\cdot, r_n)-Q_n \|_{\pi_n}=\|\Pi_nQ_n-Q_n\|_{\pi_n}$. 
+
+
+
+##Numerical Example and Code
+
 
 
 |-----------------|---------------|--------|
