@@ -1,5 +1,6 @@
 --- 
 title: "American Style Options - Regression Methods on Pricing" 
+subtitle: "Supervisor: Prof. Mihalis Markakis "
 author: "Team DUNY Dom, Uwe, Niti, Yiqun" 
 date: "April 2016"
 output: pdf_document
@@ -112,7 +113,7 @@ where $n=N-2,N-1,...,0$
 Here we base our approximation of the expectation of only a single sample. We select $m$ independent random samples of the state, $y_1,...,y_m$, according to the probability measure $\pi$, and for each $y_i$, we simulate a successor state $z_i$. Then our parameter vector $r_n$ is found by minimizing 
 $$\sum_{i=1}^m \left(\alpha \max \lbrace{g(z_i),\sum_{k=1}^K r_{n+1}(k)\phi_k(z_i) \rbrace}-\sum_{k=1}^K r(k)\phi_k(y_i) \right)^2 $$ with respect to  $r_1,...,r_K$.
 
-Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of $(\tilde{P}J)(y_i) = (PJ)(y_i$) for any function J, making our approximation an unabiased estimate the true value. Note that $\tilde{P}$ enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of $\tilde{P}$ was nonlinear.
+Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of $(\tilde{P}J)(y_i) = (PJ)(y_i$) for any function J, making our approximation an unbiased estimate the true value. Note that $\tilde{P}$ enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of $\tilde{P}$ was nonlinear.
 
 In a more general version of the algorithm we introduce probability measures $\pi_0,...,\pi_{N-1}$ such that for each time $n$ we generate $m$ random states $y_{ni},...,y_{nm}$ sampled independently. This leads to an approximate projection and our dynamic pricing algorithm becomes 
 
@@ -129,7 +130,7 @@ $\epsilon _n^ * =\min_r \|\tilde{Q}(\cdot, r_n)-Q_n \|_{\pi_n}=\|\Pi_nQ_n-Q_n\|_
 
 Now we consider a somewhat more realistic example.
 
-In this table we have listed the input values for pricing the american put
+In this table we have listed the input values for pricing the American Put
 
 |-----------------|---------------|--------|
 | strike          |   $\bar{x}$   |   1    |
@@ -786,4 +787,4 @@ library(reshape2)
 ## References
 
 - Regression Methods for Pricing Complex American-Style Options by John N.Tsitsiklis, Benjamin Van Roy
-- Pricing American Options by Simulation by Cem Coskan
+- Pricing American Options by Simulation, Cem Coskan (2006)
