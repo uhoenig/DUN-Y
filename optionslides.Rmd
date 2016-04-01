@@ -306,6 +306,8 @@ Goal: simulation-based approximate dynamic programming method for pricing comple
 
 $\Rightarrow$ deciding when to exercise an American option is an optimal stopping problem
 
+Here we are focusing on finding the optimal price.
+
 ## American Style Option
 
 - gives the holder the right to exercise at any time during the contract period

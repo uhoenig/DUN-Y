@@ -128,19 +128,3 @@ Given a sample state $y_i$, the expected value (with respect to the random next 
 
 #Conclusion (change)
 
-From the turkish paper the conclusion (maybe not applicable to our paper) FD and
-tree techniques are efficient methods to price American options with single 
-underlying security whereas simulation works well better for multi-asset
-American options. In this study, we focused on the LSM algorithm of Longstaff
-and Schwartz (2001), which is a regression-based Monte Carlo simulation method
-for pricing American options. When we know the early exercise boundary, pricing
-an American option is quite easy. In the one-dimensional case, the estimate of
-LSM for the early exercise boundary at the last time step does not match with
-the result of Black-Scholes formula and Newton Raphson method. This shows that
-LSM cannot estimate the boundary well. We tried to reduce the inefficiency of
-LSM algorithm about the input selection for the regression and improved the
-algorithm. It now estimates the price of an American option with less
-computational cost and more accurately than the LSM algorithm. Furthermore, we
-coded an optimization approach, which maximizes the total value at each time
-step, and we always had results higher than those of FD method. Therefore, it
-might be possible to use it as an upper bound of the American option price
