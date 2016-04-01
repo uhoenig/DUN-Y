@@ -5,7 +5,7 @@ date: "April 2016"
 output: beamer_presentation
 ---
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #generate the process sample space(merged binomial tree)
 sim.Price_Bin <- function(N=50, u=3/2, d=2/3, x0 =1){
   x <- matrix(0, nrow = N+1, ncol = N+1)
@@ -302,6 +302,10 @@ library(reshape2)
 - starting point the binomial option pricing model
 - extended analysis by using regression methods
 - methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space
+
+## Binomial Tree
+
+![Binomial Tree](tree.png)
 
 ## American Style Option
 
