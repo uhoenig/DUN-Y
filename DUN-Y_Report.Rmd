@@ -1,8 +1,9 @@
+--- 
+title: "American style Options - Regression methods on Pricing" 
+author: "Team DUNY Dom, Uwe, Niti, YQ" 
+date: "April 2016"
+output: pdf_document
 ---
-output: html_document
----
---- title: "American style Options - Regression methods on Pricing" author:
-"Team DUNY Dom, Uwe, Niti, YQ" date: "April 2016" output: pdf_document ---
 
 # Abstract In this report we introduce and analyze a simulation-based
 approximate dynamic programming method for pricing complex American-style
@@ -109,7 +110,7 @@ $$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi} \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}
 where $n=N-2,N-1,...,0$
 
 Here we base our approximation of the expectation of only a single sample. We select $m$ independent random samples of the state, $y_1,...,y_m$, according to the probability measure $\pi$, and for each $y_i$, we simulate a successor state $z_i$. Then our parameter vector $r_n$ is found by minimizing 
-$$\sum_{i=1}^m \left(\alpha \max \lbrace g(z_i),\sum_{k=1}^Kr_{n+1}(k)\phi(z_i))$$ with respect to  $r_1,...,r_K$.
+$$\sum_{i=1}^m \left(\alpha \max \lbrace{g(z_i),\sum_{k=1}^K r_{n+1}(k)\phi_k(z_i) \rbrace}-\sum_{k=1}^K r(k)\phi_k(y_i) \right)^2 $$ with respect to  $r_1,...,r_K$.
 
 Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of (tildaPJ)($y_i$) = (PJ)($y_i$) for any function J, making our approximation an unabiased estimate the true value. Note that (tilda P) enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of (tildaP) was nonlinear.
 
