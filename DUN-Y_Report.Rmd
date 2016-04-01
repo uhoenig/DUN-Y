@@ -1,76 +1,138 @@
 ---
-title: "American style Options - Regression methods on Pricing"
-author: "Team DUNY Dom, Uwe, Niti, YQ"
-date: "April 2016"
 output: html_document
 ---
+--- title: "American style Options - Regression methods on Pricing" author:
+"Team DUNY Dom, Uwe, Niti, YQ" date: "April 2016" output: pdf_document ---
 
-# Abstract
-In this report we introduce and analyze a simulation-based approximate dynamic programming method for pricing complex American-style options. The usual starting point is the binomial option pricing model, but we extend our analysis further by using regression methods. Our methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space. We show that with an arbitrary choice of this set, the approximation error can grow exponentially with the time horizon (time to expiration).
+# Abstract In this report we introduce and analyze a simulation-based
+approximate dynamic programming method for pricing complex American-style
+options. The usual starting point is the binomial option pricing model, but we
+extend our analysis further by using regression methods. Our methods involve the
+evaluation of value functions at a finite set, consisting of “representative”
+elements of the state space. We show that with an arbitrary choice of this set,
+the approximation error can grow exponentially with the time horizon (time to
+expiration).
 
 
 # Introduction 
 ## What is an 'American-style' Option?
 
-American style option contracts are traded extensively over several exchanges. It differs from the European options in that it gives the holder the right to exercise at any time during the contract period. Between the start date and a prescribed expiry date in the future, the holder may choose to buy or sell some prescribed underlying asset (S) at a prescribed price called the strike price (K) at any time. The exercise time $\tau$ can be represented as a stopping time. Assuming that the exercise decision is made to maximize the payoff, option price can be determined by computing the discounted expectation of the payoff of the option under a risk-neutral measure. 
+American style option contracts are traded extensively over several exchanges.
+It differs from the European options in that it gives the holder the right to
+exercise at any time during the contract period. Between the start date and a
+prescribed expiry date in the future, the holder may choose to buy or sell some
+prescribed underlying asset (S) at a prescribed price called the strike price
+(K) at any time. The exercise time $\tau$ can be represented as a stopping time.
+Assuming that the exercise decision is made to maximize the payoff, option price
+can be determined by computing the discounted expectation of the payoff of the
+option under a risk-neutral measure.
 
-However, this large range of possible stopping times makes the valuation of American option enormously difficult.The holder of an American option is thus faced with the dilemma of deciding when, if at all, to exercise. If, at time t, the option is out-of-the-money then it is clearly best not to exercise. However, if the option is in-the-money it may be beneficial to wait until a
-later time where the payoff might be even bigger.
+However, this large range of possible stopping times makes the valuation of
+American option enormously difficult.The holder of an American option is thus
+faced with the dilemma of deciding when, if at all, to exercise. If, at time t,
+the option is out-of-the-money then it is clearly best not to exercise. However,
+if the option is in-the-money it may be beneficial to wait until a later time
+where the payoff might be even bigger.
 
 ## Define Problem
 
-The price of the option is given by:  
-$$\sup_{\tau \in [0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$  
-where  
+The price of the option is given by: $$\sup_{\tau \in
+[0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$ where
 
-* $\lbrace x_\tau \in \Re^d | 0\leq t \leq \cal{T} \rbrace$ - risk-neutral process, assumed to be Markov 
-* $r$ - risk-free interest rate, assumed to be a known constant 
-* $g(x)$ - intrinsic value of the option when the state is $x$ 
-* $\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$ 
+* $\lbrace x_\tau \in \Re^d | 0\leq t \leq \cal{T} \rbrace$ - risk-neutral
+process, assumed to be Markov * $r$ - risk-free interest rate, assumed to be a
+known constant * $g(x)$ - intrinsic value of the option when the state is $x$ *
+$\cal{T}$ - expiration time, and the supremum is taken over stopping times that
+assume values in $[0,\cal{T}]$
 
-Without loss of generality it is assumed that $\mathcal{T}$ is equal to an integer $N$ and that allowable exercise times are seperated by a time interval of unit length.
+Without loss of generality it is assumed that $\mathcal{T}$ is equal to an
+integer $N$ and that allowable exercise times are seperated by a time interval
+of unit length.
 
-The price of this option is then:
+The price of this option is then: 
 $$\sup_{\tau}\mathbb{E}[\alpha^{\tau}g(x_{\tau})]$$
 
-where $\alpha = e^{-r}$. In this discrete-time and Markovian formulation, the dynamics of the risk-neutral process can be described by a transition operator $P$, defined by:
-$$(PJ)(x) = \mathbb{E}[J(x_{n+1})| x_n=x]$$
+where $\alpha = e^{-r}$ and $g(x_n)=\max(0,K-S)$ for a put option. In this discrete-time and Markovian
+formulation, the dynamics of the risk-neutral process can be described by a
+transition operator $P$, defined by: $$(PJ)(x) = \mathbb{E}[J(x_{n+1})| x_n=x]$$
 
-The above expression does not depend on $n$, since the process is assumed time-homogeneous. A primary motivation for this discretization is that it facilitates exposition of computational procedures, which typically entail discretization. 
-The algorithm generates a sequence $J_N, J_{N-1}, J_{N-2}... J_0$ of value functions, where $J_n$ is the price of the option at time $n$, if $x_n$ is equal to $x$. The value functions are generated iteratively according to
+The above expression does not depend on $n$, since the process is assumed
+time-homogeneous. A primary motivation for this discretization is that it
+facilitates exposition of computational procedures, which typically entail
+discretization. The algorithm generates a sequence $J_N, J_{N-1}, J_{N-2}...
+J_0$ of value functions, where $J_n$ is the price of the option at time $n$, if
+$x_n$ is equal to $x$. The value functions are generated iteratively according
+to
 
-$$J_N = g$$
-and $$J_n = \max(g,\alpha PJ_{n+1}) \hspace{20pt} n=(N-1,N-2,\ldots,0),$$ where the optimal is $J_N(x_0)$.
-In principle, value iteration can be used to price any option. However, the algorithm suffers from the curse of dimensionality; the computation time grows exponentially in the number $d$ of state variables. This difficulty arises because computations involve discretization of the state space, which leads to a grid whose size grows exponentially with multiple sources of uncertainity. Also, one value is computed and stored for each point in the grid leading to extensive storage space as well as exponential growth in the computation time.
+$$J_N = g$$ and $$J_n = \max(g,\alpha PJ_{n+1}) \hspace{20pt}
+n=(N-1,N-2,\ldots,0),$$ where the optimal is $J_N(x_0)$. In principle, value
+iteration can be used to price any option. However, the algorithm suffers from
+the curse of dimensionality; the computation time grows exponentially in the
+number $d$ of state variables. This difficulty arises because computations
+involve discretization of the state space, which leads to a grid whose size
+grows exponentially with multiple sources of uncertainity. Also, one value is
+computed and stored for each point in the grid leading to extensive storage
+space as well as exponential growth in the computation time.
 
-## Approximations
-$\tilde{J}:\Re^K \times \Re^K \mapsto \Re$ which assings values $\tilde{J}(x,r)$ to states $x$ where $r \in \Re^K$ is a vector of free parameters. The objective then becomes to choose, for each $n$, a parameter vector $r_n$ so that:  
-$$\tilde{J}(x,r_n) \approx J_n(x)$$
+## Approximations $\tilde{J}:\Re^d \times \Re^K \mapsto \Re$ 
+which assigns values $\tilde{J}(x,r)$ to states $x$ where $r \in \Re^K$ is a vector of free
+parameters. The objective then becomes to choose, for each $n$, a parameter
+vector $r_n$ so that: $$\tilde{J}(x,r) =f(\phi(x),r)$$ $$\tilde{J}(x,r_n) \approx J_n(x)$$
 
---------------  ----------  --------
-strike           $\bar{x}$      1
-high return        $u$        3/2
-low return         $d$        2/3
-probability        $p$       0.4121
-of high return
-discount factor $\alpha$      0.99
+One may define several features $\phi_1, ... , \phi_k$. Then to each state $x \in \Re ^d$ we associate a feature vector $\phi(x) = (\phi_1(x),...,\phi_k(x))^T$ which represents the most salient properties of the given state.
+
+The choice of the features and parameter requires theoretical analysis, human experience and that some computation of appropriate values is possible. In this paper we restrict our analysis to the least square method.
+
+This simplest form of approximate value iteration involves a single projection matrix $\Pi$ that projects onto the feature space with respect to a weigthed quadratic norm. We extend our analysis to sample-based time dependent projection. Generally exact computation of projection is not viable. However, one can approximate effectively by sampling a collection of states $y_1,...,y_m$ $\in \Re^d$ according to the probability measure $\pi$ and then defining an approximate projection operator
+
+$$\tilde{\Pi}J=argmin_{\Phi r} \sum_{i=1}^m(J(y_i)-(\Phi r)(y_i))^2$$.
+
+The difference between the exact and the approximate value converges to 0 w.p. 1 as our sample size $m$ grows.
+Now one can define an approximate value iteration version as 
+$$\tilde{J}(\cdot,r_{N-1})=\tilde{\Pi}\max(g,\alpha Pg)$$
+and
+$$\tilde{J}(\cdot,r_{n})=\tilde{\Pi} \max(g,\alpha P\tilde{J}(\cdot,r_{n+1}))$$
+
+The drawback with this method, however, is that for each sample $y_i$ and any function $J$ we need to compute the expecation $(PJ)(y_i)=\mathbb{E}[J(x_{k+1})|x_k=y_i]$ which is over a potentially high dim space. This poses a computational challenge which can be resolved by Monte Carlo simulation.
+
+For each sample $y_i$ we can simulate independent samples $z_{i,1},...,z_{i,l}$ from the transition distribution conditiond on the state being $y_i$.
+
+## Approximation using Q-Values and single samples estimates
+
+A more convenient approach relies on single sample estimates of the desired expecation. 
+Define for each $n=0,...N-1$ a $Q$-function 
+$$Q_n= \alpha PJ_{n+1}$$
+where $Q_n(x)$ represents the expected discount payoff at time $n$ conditioned on a decision not to exercise. This modification gives a new version of our dynamic pricing algorithm.
+
+$$\tilde{Q}(\cdot, r_{N-1})=\alpha \tilde{\Pi} \tilde{P}g$$
+$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi} \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}))$$
+where $n=N-2,N-1,...,0$
+
+Here we base our approximation of the expectation of only a single sample. We select $m$ independent random samples of the state, $y_1,...,y_m$, according to the probability measure $\pi$, and for each $y_i$, we simulate a successor state $z_i$. Then our parameter vector $r_n$ is found by minimizing 
+$$\sum_{i=1}^m \left(\alpha \max \lbrace g(z_i),\sum_{k=1}^Kr_{n+1}(k)\phi(z_i))$$ with respect to  $r_1,...,r_K$.
+
+Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of (tildaPJ)($y_i$) = (PJ)($y_i$) for any function J, making our approximation an unabiased estimate the true value. Note that (tilda P) enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of (tildaP) was nonlinear.
+
+--------------  ----------  -------- strike           $\bar{x}$      1 high
+return        $u$        3/2 low return         $d$        2/3 probability      
+$p$       0.4121 of high return discount factor $\alpha$      0.99 
 --------------  ----------  --------
 
 #Conclusion (change)
 
-From the turkish paper the conclusion (maybe not applicable to our paper)
-FD and tree techniques are efficient methods to price American options with single
-underlying security whereas simulation works well better for multi-asset American
-options. In this study, we focused on the LSM algorithm of Longstaff and Schwartz
-(2001), which is a regression-based Monte Carlo simulation method for pricing American
-options.
-When we know the early exercise boundary, pricing an American option is quite
-easy. In the one-dimensional case, the estimate of LSM for the early exercise boundary
-at the last time step does not match with the result of Black-Scholes formula and
-Newton Raphson method. This shows that LSM cannot estimate the boundary well.
-We tried to reduce the inefficiency of LSM algorithm about the input selection for the
-regression and improved the algorithm. It now estimates the price of an American
-option with less computational cost and more accurately than the LSM algorithm.
-Furthermore, we coded an optimization approach, which maximizes the total value at
-each time step, and we always had results higher than those of FD method. Therefore,
-it might be possible to use it as an upper bound of the American option price
+From the turkish paper the conclusion (maybe not applicable to our paper) FD and
+tree techniques are efficient methods to price American options with single 
+underlying security whereas simulation works well better for multi-asset
+American options. In this study, we focused on the LSM algorithm of Longstaff
+and Schwartz (2001), which is a regression-based Monte Carlo simulation method
+for pricing American options. When we know the early exercise boundary, pricing
+an American option is quite easy. In the one-dimensional case, the estimate of
+LSM for the early exercise boundary at the last time step does not match with
+the result of Black-Scholes formula and Newton Raphson method. This shows that
+LSM cannot estimate the boundary well. We tried to reduce the inefficiency of
+LSM algorithm about the input selection for the regression and improved the
+algorithm. It now estimates the price of an American option with less
+computational cost and more accurately than the LSM algorithm. Furthermore, we
+coded an optimization approach, which maximizes the total value at each time
+step, and we always had results higher than those of FD method. Therefore, it
+might be possible to use it as an upper bound of the American option price
