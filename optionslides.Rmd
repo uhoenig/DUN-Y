@@ -350,10 +350,10 @@ $$Q_n= \alpha PJ_{n+1}$$
 where $Q_n(x)$ represents the expected discount payoff at time $n$ conditioned on a decision not to exercise. This modification gives a new version of our dynamic pricing algorithm.
 
 $$\tilde{Q}(\cdot, r_{N-1})=\alpha \tilde{\Pi} \tilde{P}g$$
-$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi} \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}))$$
+$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi} \tilde{P}\max(g,\tilde{Q}(\cdot,r_{n+1}))$$
 where $n=N-2,N-1,...,0$
 
-## numerical example (high level Allele)
+## Numerical example (high level Allele)
 
 Let us consider stock price movements according to the tree structure seen earlier
 
@@ -413,7 +413,7 @@ ggplot(aes(x = N, y = value, color = type), data = tbl3)+
 
 ## Conclusion
 
-Simple contracts, including "vanilla options" such as American puts and calls, the relevant optimal stopping problems can be solved efficiently by traditional numerical methods.
+For simple contracts, including "vanilla options" such as American puts and calls, the relevant optimal stopping problems can be solved efficiently by traditional numerical methods.
 However, the computational requirements become prohibitive as the number of uncertainties of a contract grows.
 
 - We introduced certain simulation-based methods of the value iteration type for pricing complex American-style options.
