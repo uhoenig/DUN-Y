@@ -5,6 +5,7 @@ date: "April 2016"
 output: pdf_document
 ---
 
+
 # Abstract In this report we introduce and analyze a simulation-based
 approximate dynamic programming method for pricing complex American-style
 options. The usual starting point is the binomial option pricing model, but we
@@ -114,10 +115,15 @@ $$\sum_{i=1}^m \left(\alpha \max \lbrace{g(z_i),\sum_{k=1}^K r_{n+1}(k)\phi_k(z_
 
 Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of (tildaPJ)($y_i$) = (PJ)($y_i$) for any function J, making our approximation an unabiased estimate the true value. Note that (tilda P) enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of (tildaP) was nonlinear.
 
---------------  ----------  -------- strike           $\bar{x}$      1 high
-return        $u$        3/2 low return         $d$        2/3 probability      
-$p$       0.4121 of high return discount factor $\alpha$      0.99 
---------------  ----------  --------
+
+|-----------------|---------------|--------|
+| strike          |   $\bar{x}$   |   1    |
+| high return     |     $u$       |  3/2   |
+| low return      |     $d$       |  2/3   |
+| probability     |     $p$       | 0.4121 |
+| of high return  |               |        |
+| discount factor |   $\alpha$    |  0.99  |
+
 
 #Conclusion (change)
 
