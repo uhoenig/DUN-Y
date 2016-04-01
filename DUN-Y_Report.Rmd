@@ -9,7 +9,7 @@ output: pdf_document
 In this report we introduce and analyze a simulation-based approximate dynamic programming method for pricing complex American-style options. The usual starting point is the binomial option pricing model, but we extend our analysis further by using regression methods. Our methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space. We show that with an arbitrary choice of this set, the approximation error can grow exponentially with the time horizon (time to expiration).
 
 
-## Introduction (I think this is okay for now!)
+## Introduction 
 # What is an 'American-style Option'
 An American call or put option is a
 contract such that the owner may (without obligation) buy or sell some prescribed
@@ -24,7 +24,7 @@ all, to exercise. If, at time t, the option is out-of-the-money then it is clear
 exercise. However, if the option is in-the-money it may be beneficial to wait until a
 later time where the payoff might be even bigger. 
 
-OTHER INTRO TEXT HERE
+## Define Problem
 
 The price is given by:  
 $$\sup_{\tau \in [0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$  
@@ -33,7 +33,6 @@ ${x_\tau \in \Re^d | 0\leq t \leq \cal{T}}$ - risk-neutral process, assumed to b
 $r$ - risk-free interest rate, assumed to be a known constant  
 $g(x)$ - intrinsic value of the option when the state is $x$  
 $\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$
-
 
 Without loss of generality it is assumed that $\mathcal{T}$ is equal to an integer $N$ and that allowable exercise times are seperated by a time interval of unit length.
 
