@@ -1,6 +1,6 @@
 --- 
-title: "American style Options - Regression methods on Pricing" 
-author: "Team DUNY Dom, Uwe, Niti, YQ" 
+title: "American Style Options - Regression Methods on Pricing" 
+author: "Team DUNY Dom, Uwe, Niti, Yiqun" 
 date: "April 2016"
 output: pdf_document
 ---
@@ -42,11 +42,11 @@ where the payoff might be even bigger.
 The price of the option is given by: $$\sup_{\tau \in
 [0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$ where
 
-* $\lbrace x_\tau \in \Re^d | 0\leq t \leq \cal{T} \rbrace$ - risk-neutral
-process, assumed to be Markov * $r$ - risk-free interest rate, assumed to be a
-known constant * $g(x)$ - intrinsic value of the option when the state is $x$ *
-$\cal{T}$ - expiration time, and the supremum is taken over stopping times that
-assume values in $[0,\cal{T}]$
+- $\lbrace x_\tau \in \Re^d | 0\leq t \leq \cal{T} \rbrace$
+- risk-neutral process, assumed to be Markov 
+- $r$ - risk-free interest rate, assumed to be a known constant 
+- $g(x)$ - intrinsic value of the option when the state is $x$
+- $\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$
 
 Without loss of generality it is assumed that $\mathcal{T}$ is equal to an
 integer $N$ and that allowable exercise times are separated by a time interval
@@ -77,10 +77,8 @@ grows exponentially with multiple sources of uncertainty. Also, one value is
 computed and stored for each point in the grid leading to extensive storage
 space as well as exponential growth in the computation time.
 
-## Approximations $\tilde{J}:\Re^d \times \Re^K \mapsto \Re$ 
-which assigns values $\tilde{J}(x,r)$ to states $x$ where $r \in \Re^K$ is a vector of free
-parameters. The objective then becomes to choose, for each $n$, a parameter
-vector $r_n$ so that: $$\tilde{J}(x,r) =f(\phi(x),r)$$ $$\tilde{J}(x,r_n) \approx J_n(x)$$
+## Approximations 
+$\tilde{J}:\Re^d \times \Re^K \mapsto \Re$ which assigns values $\tilde{J}(x,r)$ to states $x$ where $r \in \Re^K$ is a vector of free parameters. The objective then becomes to choose, for each $n$, a parameter vector $r_n$ so that: $$\tilde{J}(x,r) =f(\phi(x),r)$$ $$\tilde{J}(x,r_n) \approx J_n(x)$$
 
 One may define several features $\phi_1, ... , \phi_k$. Then to each state $x \in \Re ^d$ we associate a feature vector $\phi(x) = (\phi_1(x),...,\phi_k(x))^T$ which represents the most salient properties of the given state.
 
@@ -96,7 +94,7 @@ $$\tilde{J}(\cdot,r_{N-1})=\tilde{\Pi}\max(g,\alpha Pg)$$
 and
 $$\tilde{J}(\cdot,r_{n})=\tilde{\Pi} \max(g,\alpha P\tilde{J}(\cdot,r_{n+1}))$$
 
-The drawback with this method, however, is that for each sample $y_i$ and any function $J$ we need to compute the expectation $(PJ)(y_i)=\mathbb{E}[J(x_{k+1})|x_k=y_i]$ which is over a potentially high dim space. This poses a computational challenge which can be resolved by Monte Carlo simulation.
+The drawback with this method, however, is that for each sample $y_i$ and any function $J$ we need to compute the expectation $(PJ)(y_i)=\mathbb{E}[J(x_{k+1})|x_k=y_i]$ which is over a potentially high dimensional space. This poses a computational challenge which can be resolved by Monte Carlo simulation.
 
 For each sample $y_i$ we can simulate independent samples $z_{i,1},...,z_{i,l}$ from the transition distribution conditioned on the state being $y_i$.
 
@@ -122,13 +120,16 @@ $$\tilde{Q}(\cdot, r_{N-1})=\alpha \tilde{\Pi}_{N-1} \tilde{P}g$$
 $$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi}_n \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}))$$
 where $n=N-2,N-1,...,0$
 
-If the sample states used in the approximate projections are obtained by simulating trajectories of the process $x_n$ then the approximation error does not grow exponentially but rather of the order $\sqrt(N \epsilon)$. The approximation error of the idealized algorithm is the best possible error under the chosen aproximation architecture.
+If the sample states used in the approximate projections are obtained by simulating trajectories of the process $x_n$ then the approximation error does not grow exponentially but rather of the order $\sqrt(N \epsilon)$. The approximation error of the idealized algorithm is the best possible error under the chosen approximation architecture.
 $\epsilon _n^ * =\min_r \|\tilde{Q}(\cdot, r_n)-Q_n \|_{\pi_n}=\|\Pi_nQ_n-Q_n\|_{\pi_n}$. 
 
 
 
 ##Numerical Example and Code
 
+Now we consider a somewhat more realistic example.
+
+In this table we have listed the input values for pricing the american put
 
 |-----------------|---------------|--------|
 | strike          |   $\bar{x}$   |   1    |
@@ -138,10 +139,10 @@ $\epsilon _n^ * =\min_r \|\tilde{Q}(\cdot, r_n)-Q_n \|_{\pi_n}=\|\Pi_nQ_n-Q_n\|_
 | of high return  |               |        |
 | discount factor |   $\alpha$    |  0.99  |
 
+We will approximate the value function using a quadratic. For each $n$, the weights are given by a three-dimensional vector $r_n \in \Re^3$ and the approximation is defined by
+$$\tilde{Q}(x,r_n)=r_n(1) + r_n(2)x + r_n(3)x^2$$.
 
-
-## CODE
-
+## Further plots 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #generate the process sample space(merged binomial tree)
 sim.Price_Bin <- function(N=50, u=3/2, d=2/3, x0 =1){
@@ -436,7 +437,7 @@ library(reshape2)
 
 ## Exponential Growth Rate
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 
 tbl <- data.frame(N=4:30, Q=Q_collect, Q1=Q1_collect)
 tbl <- melt(tbl, id.vars = "N", variable.name = "type")
@@ -451,7 +452,7 @@ ggplot(aes(x = N, y = value, color = type), data = tbl)+
 
 ## Square Root Growth Rate
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 tbl2 <- data.frame(N=4:30, Q=Q_collect, Q2=Q2_collect)
 tbl2 <- melt(tbl2, id.vars = "N", variable.name = "type")
 
@@ -465,7 +466,7 @@ ggplot(aes(x = N, y = value, color = type), data = tbl2)+
 
 ## Sampling Method
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 tbl3 <- data.frame(N=4:30, Q=Q_collect, 
                    Q3_m10 = Q3_collect[,1],
                    Q3_m25 = Q3_collect[,2],
@@ -489,3 +490,300 @@ However, the computational requirements become prohibitive as the number of unce
 - provided convergence results and error bounds that establish that such methods are viable, as long as state sampling is carried out by simulating the natural distribution of the underlying state process.
 - This provides theoretical support for the apparent effectiveness of this particular form of state sampling.
 
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+#generate the process sample space(merged binomial tree)
+sim.Price_Bin <- function(N=50, u=3/2, d=2/3, x0 =1){
+  x <- matrix(0, nrow = N+1, ncol = N+1)
+  
+  for(i in 1: (N+1)){
+    for(j in 1:i){
+      x[i, j]=x0*u^(j-1)*d^(i-j)
+    
+    }
+    
+  }
+  return(x)
+  
+}
+
+
+#generate the corresponding probability
+sim.Prob_Bin <- function(N=50, p = 0.4121){
+  pi <- matrix(0, nrow = N+1, ncol = N+1)
+  
+  for(i in 1: (N+1)){
+    for(j in 1:i){
+      pi[i,j] <- dbinom(x = j-1, size = i-1, prob = p )
+      
+    }
+    
+  }
+  return(pi)
+  
+}
+
+
+#payoff function
+g <- function(x, strike = 1){
+  return(pmax(0, strike - x))
+  
+}
+
+
+#Expectation operator 
+P <- function(state, p = 0.4121){
+  return(sum(state*c(1-p, p)))
+  
+}
+
+
+#some parameters
+x_strike <- 1
+alpha <- 0.99
+p = 0.4121
+x0=1.1
+u = 3/2
+d = 2/3
+
+
+#exact value of J
+J.exact <- function(N=25,...){
+  J <- matrix(0, nrow = N+1, ncol = N+1)
+
+  J[N+1,] <- g(x[N+1,],x_strike)
+  
+  for(i in N:1){
+    for(j in 1:i){
+      J[i,j] <- pmax(g(x[i,j],x_strike), alpha * P(J[i+1,c(j,j+1)],p))
+      
+    }
+    
+  }
+  return(J[1,1])
+  
+}
+
+
+#exact Q function
+Q.exact <- function(N=25,...){
+  Q <- matrix(0, nrow = N+1, ncol = N+1)
+  
+  Q[N+1,] <- g(x[N+1,],x_strike)
+  
+  for(j in 1:N){
+    Q[N, j] <- alpha * P(Q[N+1,c(j,j+1)], p)
+    
+  }
+  
+  for(i in (N-1):1){
+    for(j in 1:i){
+      Q[i,j] <- alpha * P(pmax(g(x[i+1,c(j, j+1)],x_strike), Q[i+1,c(j,j+1)]), p)
+      
+    }
+    
+  }
+  return(Q[1,1])
+  
+}
+
+
+##Regression with fictitious pi
+dim <- 3
+S <- seq(from = 0.1, to = 2, by = 0.1)
+
+
+#feature mapping
+phi1 <- function(x){
+  return(rep(1, length(x)))
+  
+}
+
+
+phi2 <- function(x){
+  return(x)
+  
+}
+
+
+phi3 <- function(x){
+  return(x^2)
+  
+}
+
+
+#conbind features to get input matrix
+phi <- function(x, dim = 3, base = list(phi1, phi2, phi3)){
+  base_Mat <- matrix(0, nrow = length(x), ncol = dim)
+  
+  for( j in 1:dim){
+    base_Mat[,j] <- base[[j]](x)
+    
+  }
+  return(base_Mat)
+  
+}
+
+
+#Regression with gussing probability
+Q1.approx <- function(N=25,...){
+  r <- matrix(0, ncol = N, nrow = dim )
+  Q1 <- matrix(0, nrow = N, ncol = length(S))
+  
+  for(j in 1:length(S)){
+    Q1[N, j] <- alpha * P(g(c(S[j]*d, S[j]*u)),p)
+    
+  }
+  
+  r[, N] <- solve((t(phi(S)) %*% phi(S)), t(phi(S)) %*% Q1[N,])
+  
+  for (i in (N-1):1){
+    for(j in 1:length(S)){
+      
+      Q1[i, j] <- alpha*P(pmax(g(c(S[j]*d, S[j]*u)), 
+                               c(phi(S[j]*d) %*% r[,i+1], phi(S[j]*u) %*% r[,i+1])))
+      
+    }
+    
+    r[, i] <- solve((t(phi(S)) %*% phi(S)), t(phi(S)) %*% Q1[i,])
+    
+  }
+  Q1_0 <- phi(S[11]) %*% r[,1]
+  return(Q1_0)
+  
+}
+
+
+#Regression with true probability
+Q2.approx.pop <- function(N=25,...){
+  r2 <- matrix(0, ncol = N, nrow = dim )
+  Q2<- matrix(0, nrow = N, ncol =  N)
+  
+  for(j in 1:N){
+    Q2[N, j] <- alpha * P(g(x[N+1,])[c(j,j+1)], p)
+    
+  }
+  
+  r2[,N] <- solve(t(phi(x[N,1:N])) %*% (phi(x[N, 1:N])*pi[N,1:N]), 
+                  t(phi(x[N, 1:N]))%*% (Q2[N,1:N] *pi[N,1:N])) 
+  
+  Q2[N,] <- phi(x[N,1:N]) %*% r2[,N]
+  
+  for(i in (N-1):dim){
+    for(j in 1:i){
+      Q2[i,j] <- alpha * P(pmax(g(x[i+1,c(j, j+1)]), Q2[i+1,c(j,j+1)]), p)
+      
+    }
+    
+    r2[,i] <- solve(t(phi(x[i,1:i])) %*% (phi(x[i,1:i]) * pi[i,1:i]),
+                    t(phi(x[i, 1:i])) %*% (Q2[i, 1:i]* pi[i,1:i]))
+    
+    Q2[i, 1:i ] <- phi(x[i,1:i]) %*% r2[,i]
+    
+  }
+  
+  for(i in (dim-1):1){
+    for(j in 1:i){
+      Q2[i,j] <- alpha * P(pmax(g(x[i+1,c(j, j+1)]), Q2[i+1,c(j,j+1)]), p)
+      
+    }
+    
+  }
+  return(Q2[1,1])
+  
+}
+
+
+#simulate trajectories
+sim.Trajectory <- function(m = 10, N=25, x0 = 1.1,...){
+  traj <- matrix(0, nrow = m, ncol = N+1)
+  traj[,1] <- x0
+  
+  for(j in 2:ncol(traj)){
+    traj[,j] <- traj[,j-1]*ifelse(rbinom(m,1,prob = p), u, d)
+    
+  }
+  return(traj)
+  
+}
+
+
+#Regression with sampling from true probability
+Q3.approx.sim <- function(N=25,m=10,...){
+  r3 <- matrix(0, ncol = N, nrow = dim )
+  
+  Q3<- matrix(0, nrow = N, ncol =  m)
+  
+  for(j in 1:m){
+    Q3[N,j] <- alpha * g(traj[j,N+1])
+    
+  }
+  
+  r3[,N] <- solve(t(phi(traj[,N])) %*% phi(traj[,N]), 
+                  t(phi(traj[,N])) %*% Q3[N,])
+  
+  Q3[N,] <- phi(traj[,N]) %*% r3[,N]
+  
+  for(i in (N-1):dim){
+    for(j in 1:m){
+      Q3[i,j] <- alpha * pmax(g(traj[j,i+1]), Q3[i+1, j])
+      
+    }
+    
+    r3[,i] <- solve(t(phi(traj[,i])) %*% phi(traj[,i]), 
+                    t(phi(traj[,i])) %*% Q3[i,])
+    
+    Q3[i,] <- phi(traj[,i]) %*% r3[,i]
+    
+  }
+  
+  for(i in (dim-1):1){
+    Q3[i,] <- phi(traj[,i]) %*% r3[,dim] 
+    
+  }
+  return(Q3[1,1])
+  
+}
+
+
+#Caculate
+Q_collect <-numeric(30-dim)
+Q1_collect <-numeric(30-dim)
+Q2_collect <- numeric(30-dim)
+Q3_collect <- matrix(0, nrow = 30-dim, ncol = 4 )
+
+
+#simulation sample size
+m <- c(10, 25, 50, 100)
+
+for(N in 4:30){
+  x <- sim.Price_Bin(N=N, x0 = x0)
+  
+  pi <- sim.Prob_Bin(N=N, p = p)
+  
+  Q_collect[N-dim]<- Q.exact(N=N)
+  
+  Q1_collect[N-dim] <- Q1.approx(N=N)
+  
+  Q2_collect[N-dim] <- Q2.approx.pop(N=N)
+  
+  for(j in 1:length(m)){
+    set.seed(1111)
+    traj <- sim.Trajectory(N=N, m=m[j])
+    
+    Q3_collect[N-dim,j] <- Q3.approx.sim(N=N,m = m[j])
+
+  }
+  
+}
+
+library(ggplot2)
+library(reshape2)
+
+```
+
+
+
+## References
+
+- Regression Methods for Pricing Complex American-Style Options by John N.Tsitsiklis, Benjamin Van Roy
+- Pricing American Options by Simulation by Cem Coskan
