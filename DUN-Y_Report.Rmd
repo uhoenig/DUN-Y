@@ -38,16 +38,16 @@ the option is out-of-the-money then it is clearly best not to exercise. However,
 if the option is in-the-money it may be beneficial to wait until a later time
 where the payoff might be even bigger.
 
-## Define Problem
+## Define the problem
 
 The price of the option is given by: $$\sup_{\tau \in
 [0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$ where
 
-- $\lbrace x_\tau \in \Re^d | 0\leq t \leq \cal{T} \rbrace$
+- $\lbrace x_\tau \in \Re^d | 0\leq \tau \leq \cal{T} \rbrace$
 - risk-neutral process, assumed to be Markov 
 - $r$ - risk-free interest rate, assumed to be a known constant 
-- $g(x)$ - intrinsic value of the option when the state is $x$
-- $\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$
+- $g(x)$ - intrinsic value of the option at state $x$
+- $\cal{T}$ - expiration time - the supremum is taken over all possible stopping times in $[0,\cal{T}]$
 
 Without loss of generality it is assumed that $\mathcal{T}$ is equal to an
 integer $N$ and that allowable exercise times are separated by a time interval
@@ -102,26 +102,26 @@ For each sample $y_i$ we can simulate independent samples $z_{i,1},...,z_{i,l}$ 
 ## Approximation using Q-Values and single samples estimates
 
 A more convenient approach relies on single sample estimates of the desired expectation. 
-Define for each $n=0,...N-1$ a $Q$-function 
+Define for each $n=0,...,N-1$ a $Q$-function 
 $$Q_n= \alpha PJ_{n+1}$$
 where $Q_n(x)$ represents the expected discount payoff at time $n$ conditioned on a decision not to exercise. This modification gives a new version of our dynamic pricing algorithm.
 
 $$\tilde{Q}(\cdot, r_{N-1})=\alpha \tilde{\Pi} \tilde{P}g$$
-$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi} \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}))$$
+$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi} \tilde{P}\max(g,\tilde{Q}(\cdot,r_{n+1}))$$
 where $n=N-2,N-1,...,0$
 
-Here we base our approximation of the expectation of only a single sample. We select $m$ independent random samples of the state, $y_1,...,y_m$, according to the probability measure $\pi$, and for each $y_i$, we simulate a successor state $z_i$. Then our parameter vector $r_n$ is found by minimizing
-$$\sum_{i=1}^m \left(\alpha \max \lbrace{g(z_i),\sum_{k=1}^K r_{n+1}(k)\phi_k(z_i) \rbrace}-\sum_{k=1}^K r(k)\phi_k(y_i) \right)^2 $$ with respect to  $r_1,...,r_K$.
+Here we base our approximation of the expectation of only a single sample. We select $m$ independent random samples of the state, $y_1,...,y_m$, according to the probability measure $\pi$, and for each $y_i$, we simulate a successor state $z_i$. Then our parameter vector $r_n$ is found by minimizing 
+$$\sum_{i=1}^m \left(\alpha \max \big{\lbrace{}g(z_i),\sum_{k=1}^K r_{n+1}(k)\phi_k(z_i) \big{\rbrace}}-\sum_{k=1}^K r(k)\phi_k(y_i) \right)^2 $$ with respect to  $r_1,...,r_K$.
 
 Given a sample state $y_i$, the expected value (with respect to the random next state $z_i$) of $(\tilde{P}J)(y_i) = (PJ)(y_i$) for any function J, making our approximation an unbiased estimate the true value. Note that $\tilde{P}$ enters linearly and effectively allows for the noise to be averaged out. This was not possible in the original version of approximation where the dependence of $\tilde{P}$ was nonlinear.
 
 In a more general version of the algorithm we introduce probability measures $\pi_0,...,\pi_{N-1}$ such that for each time $n$ we generate $m$ random states $y_{ni},...,y_{nm}$ sampled independently. This leads to an approximate projection and our dynamic pricing algorithm becomes 
 
 $$\tilde{Q}(\cdot, r_{N-1})=\alpha \tilde{\Pi}_{N-1} \tilde{P}g$$
-$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi}_n \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}))$$
+$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi}_n \tilde{P}\max(g,\tilde{Q}(\cdot,r_{n+1}))$$
 where $n=N-2,N-1,...,0$
 
-If the sample states used in the approximate projections are obtained by simulating trajectories of the process $x_n$ then the approximation error does not grow exponentially but rather of the order $\sqrt(N \epsilon)$. The approximation error of the idealized algorithm is the best possible error under the chosen approximation architecture.
+If the sample states used in the approximate projections are obtained by simulating trajectories of the process $x_n$ then the approximation error does not grow exponentially but rather of the order $\sqrt{N \epsilon}$. The approximation error of the idealized algorithm is the best possible error under the chosen approximation architecture.
 $\epsilon _n^ * =\min_r \|\tilde{Q}(\cdot, r_n)-Q_n \|_{\pi_n}=\|\Pi_nQ_n-Q_n\|_{\pi_n}$. 
 
 
@@ -451,6 +451,8 @@ ggplot(aes(x = N, y = value, color = type), data = tbl)+
 
 ```
 
+We can see that if we let the distribution assign probabilities uniformly to points in a discrete grid spread over a segment of the state space which is far from the true data generating process $\pi_t$ at each state, approximate value iteration algorithms lead to errors that grow exponentially in the problem horizon.
+
 ## Square Root Growth Rate
 
 ```{r, echo=TRUE}
@@ -465,7 +467,9 @@ ggplot(aes(x = N, y = value, color = type), data = tbl2)+
 
 ```
 
-## Sampling Method
+However, if the sample states used in approximate projection are obtained according to true probability $\pi_t$, then the approximation error grows no faster than $\sqrt{N}$. The figure above uses exact calculation of expectations and projections. 
+
+## Sample-based Method
 
 ```{r, echo=TRUE}
 tbl3 <- data.frame(N=4:30, Q=Q_collect, 
@@ -481,6 +485,11 @@ ggplot(aes(x = N, y = value, color = type), data = tbl3)+
   theme_bw() +
   ggtitle("Sampling Method")
 ```
+
+So starting from the given initial state, we can simulate independent trajectories of the process to run the approximate projection. The above figure shows that the additional errors introduced by random sampling of the state space are not the main issue of our toy example.
+
+####Remarks:
+Even the paper gives an asymptotic result on the dependence of sampling error and sample size $m$ and suggests drawing samples as many as possible. Of course the sample size should not be too small, since it will cause sampling bias or even make the the input matrix of regression singular. But for our toy example(or other applications), the variance of some feature mapping on state variable is quite large especially in later stages. In other words, more sample draws means higher possibility of getting outliers. This is a bad thing for linear regressions because they might not be robust and sensitive to outliers. So it will cause extimation errors of weights accumulated during the dynamic programming. The most serious situation is to create **computational singular** input matrix when extimating the regression coefficients and then stop the iterations in an unexpected way.
 
 ## Conclusion
 
