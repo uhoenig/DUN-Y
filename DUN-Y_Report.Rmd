@@ -6,7 +6,8 @@ output: pdf_document
 ---
 
 
-# Abstract In this report we introduce and analyze a simulation-based
+# Abstract
+In this report we introduce and analyze a simulation-based
 approximate dynamic programming method for pricing complex American-style
 options. The usual starting point is the binomial option pricing model, but we
 extend our analysis further by using regression methods. Our methods involve the
