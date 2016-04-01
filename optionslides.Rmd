@@ -1,6 +1,6 @@
 ---
-title: "American style Options - Regression methods on Pricing"
-author: "Team DUNY Dom, Uwe, Niti, YQ"
+title: "American Style Options - Regression methods on Pricing"
+author: "Team DUNY - Dom, Uwe, Niti, YQ"
 date: "April 2016"
 output: beamer_presentation
 ---
@@ -298,14 +298,13 @@ library(reshape2)
 
 ## Introduction
 
-- simulation-based approximate dynamic programming method for pricing complex American-style options
-- starting point the binomial option pricing model
+Goal: simulation-based approximate dynamic programming method for pricing complex American-style options
+
+- starting point: the binomial option pricing model
 - extended analysis by using regression methods
 - methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space
 
-## Binomial Tree
-
-![Binomial Tree](tree.png)
+$\Rightarrow$ deciding when to exercise an American option is an optimal stopping problem
 
 ## American Style Option
 
@@ -313,6 +312,10 @@ library(reshape2)
 - holder of call(put) option may buy(sell) the underlying asset $S$ at a prescribed price $K$ (strike price)
 - the exercise time $\tau$ can be represented as a stopping time
 - option price determined by computing the discounted expectated payoff of the option under a risk-neutral measure
+
+## Binomial Tree
+
+![Binomial Tree](tree2.png)
 
 ## Define Problem
 
@@ -336,9 +339,29 @@ where $\alpha = e^{-r}$
 In this discrete-time and Markovian formulation, the dynamics of the risk-neutral process can be described by a transition operator $P$, defined by:
 $$(PJ)(x) = \mathbb{E}[J(x_{n+1})| x_n=x]$$
 
-## Dynamics
 
 ## Approximations
+
+A more convenient approach relies on single sample estimates of the desired expectation. 
+Define for each $n=0,...N-1$ a $Q$-function 
+$$Q_n= \alpha PJ_{n+1}$$
+where $Q_n(x)$ represents the expected discount payoff at time $n$ conditioned on a decision not to exercise. This modification gives a new version of our dynamic pricing algorithm.
+
+$$\tilde{Q}(\cdot, r_{N-1})=\alpha \tilde{\Pi} \tilde{P}g$$
+$$\tilde{Q}(\cdot,r_n)=\alpha \tilde{\Pi} \tilde{P}\max(g,\tilde{Q}(\cdot,r{n+1}))$$
+where $n=N-2,N-1,...,0$
+
+## numerical example (high level Allele)
+
+Let us consider stock price movements according to the tree structure seen earlier
+
+|-----------------|---------------|--------|
+| strike          |   $\bar{x}$   |   1    |
+| high return     |     $u$       |  3/2   |
+| low return      |     $d$       |  2/3   |
+| probability     |     $p$       | 0.4121 |
+| of high return  |               |        |
+| discount factor |   $\alpha$    |  0.99  |
 
 ## Exponential Growth Rate
 
@@ -385,3 +408,11 @@ ggplot(aes(x = N, y = value, color = type), data = tbl3)+
   theme_bw() +
   ggtitle("Sampling Method")
 ```
+
+## Conclusion
+
+For simple contracts, including "vanilla options" such as American puts and calls, the relevant optimal stopping problems can be solved efficiently by traditional numerical methods. However, the computational requirements associated with such methods become prohibitive as the number of uncertainties influencing the value of a contract grows.
+
+- We introduced certain simulation-based methods of the value iteration type for pricing complex American-style options.
+- provided convergence results and error bounds that establish that such methods are viable, as long as state sampling is carried out by simulating the natural distribution of the underlying state process.
+- This provides theoretical support for the apparent effectiveness of this particular form of state sampling.
