@@ -2,15 +2,15 @@
 title: "American style Options - Regression methods on Pricing"
 author: "Team DUNY Dom, Uwe, Niti, YQ"
 date: "April 2016"
-output: pdf_document
+output: html_document
 ---
 
-## Abstract
+# Abstract
 In this report we introduce and analyze a simulation-based approximate dynamic programming method for pricing complex American-style options. The usual starting point is the binomial option pricing model, but we extend our analysis further by using regression methods. Our methods involve the evaluation of value functions at a finite set, consisting of “representative” elements of the state space. We show that with an arbitrary choice of this set, the approximation error can grow exponentially with the time horizon (time to expiration).
 
 
-## Introduction 
-# What is an 'American-style Option'
+# Introduction 
+## What is an 'American-style' Option?
 
 American style option contracts are traded extensively over several exchanges. It differs from the European options in that it gives the holder the right to exercise at any time during the contract period. Between the start date and a prescribed expiry date in the future, the holder may choose to buy or sell some prescribed underlying asset (S) at a prescribed price called the strike price (K) at any time. The exercise time $\tau$ can be represented as a stopping time. Assuming that the exercise decision is made to maximize the payoff, option price can be determined by computing the discounted expectation of the payoff of the option under a risk-neutral measure. 
 
@@ -19,30 +19,31 @@ later time where the payoff might be even bigger.
 
 ## Define Problem
 
-The price is given by:  
+The price of the option is given by:  
 $$\sup_{\tau \in [0,\cal{T}]}\mathbb{E}[e^{-r\tau}g(x_\tau)]$$  
 where  
-$\{x_\tau \in \Re^d | 0\leq t \leq \cal{T}\}$ - risk-neutral process, assumed to be Markov    
-$r$ - risk-free interest rate, assumed to be a known constant  
-$g(x)$ - intrinsic value of the option when the state is $x$  
-$\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$
+
+* $\lbrace x_\tau \in \Re^d | 0\leq t \leq \cal{T} \rbrace$ - risk-neutral process, assumed to be Markov 
+* $r$ - risk-free interest rate, assumed to be a known constant 
+* $g(x)$ - intrinsic value of the option when the state is $x$ 
+* $\cal{T}$ - expiration time, and the supremum is taken over stopping times that assume values in $[0,\cal{T}]$ 
 
 Without loss of generality it is assumed that $\mathcal{T}$ is equal to an integer $N$ and that allowable exercise times are seperated by a time interval of unit length.
 
 The price of this option is then:
 $$\sup_{\tau}\mathbb{E}[\alpha^{\tau}g(x_{\tau})]$$
 
-where $\alpha = e^{-\tau}$. In this discrete-time and Markovian formulation, the dynamics of the risk-neutral process can be described by a transition operator $P$, defined by:
+where $\alpha = e^{-r}$. In this discrete-time and Markovian formulation, the dynamics of the risk-neutral process can be described by a transition operator $P$, defined by:
 $$(PJ)(x) = \mathbb{E}[J(x_{n+1})| x_n=x]$$
 
 The above expression does not depend on $n$, since the process is assumed time-homogeneous. A primary motivation for this discretization is that it facilitates exposition of computational procedures, which typically entail discretization. 
 The algorithm generates a sequence $J_N, J_{N-1}, J_{N-2}... J_0$ of value functions, where $J_n$ is the price of the option at time $n$, if $x_n$ is equal to $x$. The value functions are generated iteratively according to
 
-$$J_n = g$$
-and $J_n = \max(g,\alpha PJ_{n+1}$ $n=N-1,N-2,\ldots,0$, where the optimal is J_N(x_0).
-In principle, value iteration can be used to price any option. However, the algorithm suffers from the curse of dimensionality - i.e., the computation time grows exponentially in the number $d$ of state variables. This difficulty arises because computations involve discretization of the state space, and such discretization leads to a grid whose size grows exponentially in dimension. Since one value is computed and stored for each point in the grid, the computation time exhibits exponential growth.
+$$J_N = g$$
+and $$J_n = \max(g,\alpha PJ_{n+1}) \hspace{20pt} n=(N-1,N-2,\ldots,0),$$ where the optimal is $J_N(x_0)$.
+In principle, value iteration can be used to price any option. However, the algorithm suffers from the curse of dimensionality; the computation time grows exponentially in the number $d$ of state variables. This difficulty arises because computations involve discretization of the state space, which leads to a grid whose size grows exponentially with multiple sources of uncertainity. Also, one value is computed and stored for each point in the grid leading to extensive storage space as well as exponential growth in the computation time.
 
-#Approximations
+## Approximations
 $\tilde{J}:\Re^K \times \Re^K \mapsto \Re$ which assings values $\tilde{J}(x,r)$ to states $x$ where $r \in \Re^K$ is a vector of free parameters. The objective then becomes to choose, for each $n$, a parameter vector $r_n$ so that:  
 $$\tilde{J}(x,r_n) \approx J_n(x)$$
 
