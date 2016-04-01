@@ -411,7 +411,8 @@ ggplot(aes(x = N, y = value, color = type), data = tbl3)+
 
 ## Conclusion
 
-For simple contracts, including "vanilla options" such as American puts and calls, the relevant optimal stopping problems can be solved efficiently by traditional numerical methods. However, the computational requirements associated with such methods become prohibitive as the number of uncertainties influencing the value of a contract grows.
+Simple contracts, including "vanilla options" such as American puts and calls, the relevant optimal stopping problems can be solved efficiently by traditional numerical methods.
+However, the computational requirements become prohibitive as the number of uncertainties of a contract grows.
 
 - We introduced certain simulation-based methods of the value iteration type for pricing complex American-style options.
 - provided convergence results and error bounds that establish that such methods are viable, as long as state sampling is carried out by simulating the natural distribution of the underlying state process.
