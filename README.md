@@ -1,5 +1,4 @@
 # DUN-Y
-Dirty Undy
 
 PROJECT SMO: Estimation of American Call Option prices - Binomial vs Regression Models 
 
